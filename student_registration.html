@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Usajili wa Wanafunzi</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f0f8ff;
+    }
+
+    header {
+      background-color: #2a7ba0;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2a7ba0;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #2a7ba0;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #1b5e7d;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+      background-color: #2a7ba0;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Usajili wa Wanafunzi</h1>
+    <p>Karibu usajili wa mwanafunzi mpya</p>
+  </header>
+
+  <div class="container">
+    <h2>Fomu ya Usajili</h2>
+    <form action="#" method="post">
+      <label for="jina">Jina Kamili la Mwanafunzi:</label>
+      <input type="text" id="jina" name="jina" required>
+
+      <label for="jinsia">Jinsia:</label>
+      <select id="jinsia" name="jinsia" required>
+        <option value="">--Chagua--</option>
+        <option value="Mwanaume">Mwanaume</option>
+        <option value="Mwanamke">Mwanamke</option>
+      </select>
+
+      <label for="dob">Tarehe ya Kuzaliwa:</label>
+      <input type="date" id="dob" name="dob" required>
+
+      <label for="darasa">Darasa Analojiunga:</label>
+      <select id="darasa" name="darasa" required>
+        <option value="">--Chagua Darasa--</option>
+        <option value="Awali">Awali</option>
+        <option value="Darasa la Kwanza">Darasa la Kwanza</option>
+        <option value="Darasa la Pili">Darasa la Pili</option>
+        <option value="Darasa la Tatu">Darasa la Tatu</option>
+        <option value="Darasa la Nne">Darasa la Nne</option>
+        <option value="Darasa la Tano">Darasa la Tano</option>
+        <option value="Darasa la Sita">Darasa la Sita</option>
+        <option value="Darasa la Saba">Darasa la Saba</option>
+      </select>
+
+      <label for="mzazi">Jina la Mzazi/Mlezi:</label>
+      <input type="text" id="mzazi" name="mzazi" required>
+
+      <label for="simu">Namba ya Simu ya Mzazi:</label>
+      <input type="tel" id="simu" name="simu" required pattern="[0-9]{10}" placeholder="Mfano: 0712345678">
+
+      <label for="anwani">Anwani ya Makazi:</label>
+      <textarea id="anwani" name="anwani" rows="3" required></textarea>
+
+      <button type="submit">Tuma Maombi</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Mabiranga Primary School</p>
+  </footer>
+
+</body>
+</html>

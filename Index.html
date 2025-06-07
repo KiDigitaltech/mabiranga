@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mabiranga Primary School</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      background-color: #2a7ba0;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #1b5e7d;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: #14516d;
+      border-radius: 5px;
+    }
+
+    .hero {
+      padding: 3rem 1rem;
+      background-color: #e0f7fa;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      font-size: 1rem;
+    }
+
+    .container {
+      padding: 1rem;
+    }
+
+    footer {
+      background-color: #2a7ba0;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: red;
+    }
+
+    .popup-title {
+      font-size: 20px;
+      color: #0077b6;
+      margin-bottom: 10px;
+    }
+
+    .popup-body {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .popup-footer {
+      margin-top: 20px;
+    }
+
+    .popup-footer a {
+      background: #0077b6;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .popup-footer a:hover {
+      background: #005f87;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 1rem;
+        border-top: 1px solid #14516d;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mabiranga Primary School</h1>
+    <p>Elimu ni Uhai</p>
+  </header>
+
+  <nav>
+    <span class="menu-toggle" onclick="toggleMenu()">&#9776;</span>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">HOME</a>
+	   <a href="staff.html">STAFF</a>
+	    <a href="results.html">RESULTS</a>
+		<a href="contact.html">CONTACT US</a>
+      <a href="about.html">ABOUT US</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Karibu Mabiranga Primary School</h1>
+    <p>Tunatoa elimu bora kwa watoto wetu kwa mazingira rafiki na salama</p>
+  </section>
+
+  <div class="container">
+    <h2>Habari na Matangazo</h2>
+    <ul>
+      <li><p>Usajili kwa darasa la awali na la kwanza <b>UMEFUNGWA</b>. Tafadhali tembelea shule kwa maelezo zaidi.</p></li>
+      <li><p>Matokeo ya mitihani ya mwisho wa muhula sasa yanapatikana kwenye kurasa ya "RESULTS".</p></li>
+    </ul> 
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Mabiranga Primary School. Haki zote zimehifadhiwa.</p>
+	<P>CREATED AND DESIGNED BY MR.IZOW TECHNOLOGY</P>
+  </footer>
+
+  <!-- Popup Modal -->
+  <div id="newNotice" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <div class="popup-title">?? Taarifa Mpya</div>
+      <div class="popup-body">
+        Matokeo ya Muhula wa Kwanza yametolewa. <br>
+        Tafadhali tembelea ukurasa wa <strong>Matokeo</strong> kuyapakua.
+      </div>
+      <div class="popup-footer">
+        <a href="results.html">Nenda Matokeo</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("show");
+    }
+
+    // Fungua popup mara moja tu kwa siku
+    window.onload = function () {
+      const today = new Date().toISOString().slice(0, 10);
+      const lastShown = localStorage.getItem("popupLastShown");
+
+      if (lastShown !== today) {
+        setTimeout(function () {
+          document.getElementById("newNotice").style.display = "block";
+          localStorage.setItem("popupLastShown", today);
+        }, 2000);
+      }
+    };
+
+    function closePopup() {
+      document.getElementById("newNotice").style.display = "none";
+    }
+  </script>
+</body>
+</html>

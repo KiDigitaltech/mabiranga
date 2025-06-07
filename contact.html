@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wasiliana Nasi - Shule ya Msingi Mabiranga</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e8f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #006494;
+      text-align: center;
+    }
+    .info {
+      margin-bottom: 30px;
+    }
+    .info p {
+      margin: 10px 0;
+      color: #333;
+    }
+    form label {
+      display: block;
+      margin-top: 15px;
+      color: #333;
+    }
+    form input, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    form button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background-color: #023e8a;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Wasiliana Nasi</h1>
+
+    <div class="info">
+      <p><strong>Shule ya Msingi Mabiranga</strong></p>
+      <p>Mkoa: Kilimanjaro</p>
+      <p>Wilaya: Moshi, Kata ya Kahe Mashariki</p>
+      <p>Kijiji: Ghona</p>
+      <p>Barua Pepe: <a href="mailto:info@mabirangaschool.ac.tz">info@mabirangaschool.ac.tz</a></p>
+      <p>Simu: <a href="tel:+255754986510">0754 986 510</a></p>
+    </div>
+
+    <form action="https://formspree.io/f/mvgrolvw" method="POST">
+  <input type="hidden" name="_redirect" value="https://yourdomain.com/success.html">
+
+      <label for="name">Jina lako:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Barua pepe:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="message">Ujumbe wako:</label>
+      <textarea id="message" name="message" rows="5" required></textarea>
+
+      <button type="submit">Tuma Ujumbe</button>
+    </form>
+  </div>
+
+</body>
+</html>
