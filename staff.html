@@ -2,114 +2,222 @@
 <html lang="sw">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Walimu - Shule ya Msingi Mabiranga</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wafanyakazi - Mabiranga Primary School</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8fa;
       margin: 0;
-      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f8ff;
+    }
+
+    header {
+      background-color: #2a7ba0;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    nav {
+      background-color: #1b5e7d;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem;
+    }
+
+    .nav-links a:hover {
+      background-color: #14516d;
+      border-radius: 5px;
     }
 
     .container {
-      max-width: 1000px;
-      margin: 50px auto;
-      padding: 20px;
-      background: #ffffff;
+      padding: 2rem;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #2a7ba0;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .staff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .staff-card {
+      background-color: white;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      color: #006494;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
     }
 
-    th {
-      background-color: #0077b6;
+    .staff-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      border: 4px solid #2a7ba0;
+    }
+
+    .staff-card h4 {
+      margin: 0;
+      color: #2a7ba0;
+    }
+
+    .staff-card p {
+      margin: 5px 0;
+      color: #444;
+    }
+
+    footer {
+      background-color: #2a7ba0;
       color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 2rem;
     }
 
-    tr:nth-child(even) {
-      background-color: #f1f9fc;
-    }
-
-    @media (max-width: 600px) {
-      table, thead, tbody, th, td, tr {
+    @media (max-width: 768px) {
+      .menu-toggle {
         display: block;
       }
-      th {
-        position: sticky;
-        top: 0;
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
       }
-      td {
-        text-align: right;
-        position: relative;
-        padding-left: 50%;
+
+      .nav-links.show {
+        display: flex;
       }
-      td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        text-align: left;
-        font-weight: bold;
+
+      .nav-links a {
+        padding: 1rem;
+        border-top: 1px solid #14516d;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Orodha ya Walimu</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Elimu</th>
-          <th>Wanaume</th>
-          <th>Wanawake</th>
-          <th>Jumla</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td data-label="Elimu">Shahada</td>
-          <td data-label="Wanaume">1</td>
-          <td data-label="Wanawake">1</td>
-          <td data-label="Jumla">2</td>
-        </tr>
-        <tr>
-          <td data-label="Elimu">Stashahada</td>
-          <td data-label="Wanaume">-</td>
-          <td data-label="Wanawake">1</td>
-          <td data-label="Jumla">1</td>
-        </tr>
-        <tr>
-          <td data-label="Elimu">Astashahada</td>
-          <td data-label="Wanaume">-</td>
-          <td data-label="Wanawake">5</td>
-          <td data-label="Jumla">5</td>
-        </tr>
-        <tr>
-          <th>Jumla</th>
-          <th>1</th>
-          <th>7</th>
-          <th>8</th>
-        </tr>
-      </tbody>
-    </table>
+<header>
+  <h1>Mabiranga Primary School</h1>
+  <p>Elimu ni Uhai</p>
+</header>
+
+<nav>
+  <span class="menu-toggle" onclick="toggleMenu()">&#9776;</span>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html">HOME</a>
+    <a href="staff.html">STAFF</a>
+    <a href="results.html">RESULTS</a>
+    <a href="student_registration.html">APPLICATION PORTAL</a>
+    <a href="contact.html">CONTACT US</a>
+    <a href="about.html">ABOUT US</a>
   </div>
+</nav>
+
+<div class="container">
+  <h2>OFISI YA WALIMU</h2>
+  <div class="staff-grid">
+    
+    <!-- Mwalimu Mkuu -->
+    <div class="staff-card">
+      <img src="female.png" alt="Mwalimu Mkuu">
+      <h4>Mwl. Eutropia Mosha</h4>
+      <p>Mkuu wa Shule</p>
+    </div>
+
+    <!-- Naibu Mwalimu Mkuu -->
+    <div class="staff-card">
+      <img src="male.png" alt="Naibu Mwalimu Mkuu">
+      <h4>Mwl. Jamal Msuya</h4>
+      <p>Makamu Mkuu wa Shule</p>
+    </div>
+
+    <!-- Mwalimu wa Taaluma -->
+    <div class="staff-card">
+      <img src="female.png" alt="Mwalimu wa Taaluma">
+      <h4>Mwl. Eliwaza Samweli</h4>
+      <p>Mwalimu wa Taaluma</p>
+    </div>
+
+    <!-- Katibu wa Shule -->
+    <div class="staff-card">
+      <img src="female.png" alt="Katibu wa Shule">
+      <h4>Mwl. Betrina Msuya</h4>
+      <p>Katibu wa Shule</p>
+    </div>
+
+    <!-- Mhasibu -->
+    <div class="staff-card">
+      <img src="female.png" alt="Mhasibu">
+      <h4>Mwl. Naomi Msechu</h4>
+      <p>Mhasibu</p>
+    </div>
+
+ <!-- Mwalimu wa Michezo -->
+    <div class="staff-card">
+      <img src="female.png" alt="Katibu wa Shule">
+      <h4>Mwl. Elinsia Tarimo</h4>
+      <p>Mratibu wa Michezo</p>
+    </div>
+	
+ <!-- Mwalimu wa Mazingira -->
+    <div class="staff-card">
+      <img src="female.png" alt="Katibu wa Shule">
+      <h4>Mwl. Fides Mtui</h4>
+      <p>Mratibu wa Mazingira</p>
+    </div>	
+	
+<!-- Mwalimu wa Mazingira -->
+    <div class="staff-card">
+      <img src="female.png" alt="Katibu wa Shule">
+      <h4>Mwl. Mwanaid Mwipopo</h4>
+      <p>Mwalimu wa Mazingira</p>
+    </div>
+	
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Mabiranga Primary School. Haki zote zimehifadhiwa.</p>
+  <p>Created and Designed by MR. IZOW TECHNOLOGY</p>
+</footer>
+
+<script>
+  function toggleMenu() {
+    document.getElementById("navLinks").classList.toggle("show");
+  }
+</script>
+
 </body>
 </html>
