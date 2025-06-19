@@ -90,23 +90,35 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.6);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-content {
-      background-color: #fff;
-      margin: 15% auto;
-      padding: 20px;
+      background: #ffffff;
+      margin: 10% auto;
+      padding: 2rem;
       width: 90%;
-      max-width: 400px;
-      border-radius: 10px;
+      max-width: 450px;
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      transform: translateY(-30px);
+      animation: slideDown 0.5s ease-out forwards;
+    }
+
+    @keyframes slideDown {
+      to { transform: translateY(0); }
     }
 
     .close {
       float: right;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -116,14 +128,16 @@
     }
 
     .popup-title {
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: bold;
       color: #0077b6;
-      margin-bottom: 10px;
+      margin-bottom: 1rem;
     }
 
     .popup-body {
       font-size: 16px;
       color: #333;
+      line-height: 1.6;
     }
 
     .popup-footer {
@@ -131,15 +145,18 @@
     }
 
     .popup-footer a {
-      background: #0077b6;
+      background: linear-gradient(135deg, #0077b6, #00bcd4);
       color: white;
-      padding: 10px 20px;
+      padding: 0.7rem 1.5rem;
       text-decoration: none;
-      border-radius: 5px;
+      border-radius: 50px;
+      box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+      transition: all 0.3s ease-in-out;
     }
 
     .popup-footer a:hover {
       background: #005f87;
+      transform: scale(1.05);
     }
 
     /* Mobile styles */
@@ -166,7 +183,7 @@
   </style>
 </head>
 <body>
-  
+
   <header>
     <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
       <img src="logo.png" alt="Logo ya Shule ya Msingi Mabiranga" style="height: 200px;">
@@ -178,15 +195,14 @@
     </div>
   </header>
 
-
   <nav>
     <span class="menu-toggle" onclick="toggleMenu()">&#9776;</span>
     <div class="nav-links" id="navLinks">
       <a href="index.html">HOME</a>
-	   <a href="staff.html">STAFF</a>
-	    <a href="results.html">RESULTS</a>
-		<a href="registration.html">APPLICATION PORTAL</a>
-		<a href="contact.html">CONTACT US</a>
+      <a href="staff.html">STAFF</a>
+      <a href="results.html">RESULTS</a>
+      <a href="student_registration.html">APPLICATION PORTAL</a>
+      <a href="contact.html">CONTACT US</a>
       <a href="about.html">ABOUT US</a>
     </div>
   </nav>
@@ -206,21 +222,20 @@
 
   <footer>
     <p>&copy; 2025 Mabiranga Primary School. Haki zote zimehifadhiwa.</p>
-	<p><a href="http://localhost/mabiranga/login.php" style="color:white; text-decoration:underline;"><i class="fas fa-user-lock"></i> Admin Dashboard</a></p>
-
+    <p><a href="login.php" style="color:white; text-decoration:underline;"><i class="fas fa-user-lock"></i> Admin Dashboard</a></p>
   </footer>
 
   <!-- Popup Modal -->
   <div id="newNotice" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closePopup()">&times;</span>
-      <div class="popup-title" style="font-size: 24px;">?? Taarifa Mpya</div>
+      <div class="popup-title">📢 Taarifa Mpya</div>
       <div class="popup-body">
-  Matokeo ya Muhula wa Kwanza yametolewa. <br>
-  Tafadhali tembelea ukurasa wa <strong>Matokeo</strong> kuyapakua.
-</div>
+        Matokeo ya Muhula wa Kwanza yametolewa! <br>
+        Tembelea ukurasa wa <strong>Matokeo</strong> ili kuyapakua mara moja.
+      </div>
       <div class="popup-footer">
-        <a href="results.html">Nenda Matokeo</a>
+        <a href="results.html">📝 Nenda Matokeo</a>
       </div>
     </div>
   </div>
@@ -230,13 +245,11 @@
       document.getElementById("navLinks").classList.toggle("show");
     }
 
-    // Fungua popup kila mara ukurasa unapofunguliwa
-window.onload = function () {
-  setTimeout(function () {
-    document.getElementById("newNotice").style.display = "block";
-  }, 2000); // sekunde 2 kuchelewa
-};
-
+    window.onload = function () {
+      setTimeout(function () {
+        document.getElementById("newNotice").style.display = "block";
+      }, 1500);
+    };
 
     function closePopup() {
       document.getElementById("newNotice").style.display = "none";
