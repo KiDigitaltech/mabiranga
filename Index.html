@@ -14,17 +14,19 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', 'Noto Color Emoji', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('kilimanjaro_twiga.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
 
     header {
-      background-color: #2a7ba0;
+      background-color: rgba(42, 123, 160, 0.85);
       color: white;
       padding: 1rem;
       text-align: center;
     }
 
     nav {
-      background-color: #1b5e7d;
+      background-color: rgba(27, 94, 125, 0.9);
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -57,7 +59,7 @@
 
     .hero {
       padding: 3rem 1rem;
-      background-color: #e0f7fa;
+      background-color: rgba(224, 247, 250, 0.85);
       text-align: center;
     }
 
@@ -72,10 +74,13 @@
 
     .container {
       padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.95);
+      margin: 2rem;
+      border-radius: 10px;
     }
 
     footer {
-      background-color: #2a7ba0;
+      background-color: rgba(42, 123, 160, 0.85);
       color: white;
       text-align: center;
       padding: 1rem;
@@ -224,7 +229,6 @@
     <p><a href="login.php" style="color:white; text-decoration:underline;"><i class="fas fa-user-lock"></i> Admin Dashboard</a></p>
   </footer>
 
-  <!-- Popup Modal -->
   <div id="newNotice" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closePopup()">&times;</span>
