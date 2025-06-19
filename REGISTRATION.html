@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fomu ya Usajili - Mabiranga Primary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      padding: 2rem;
+      margin: 0;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 2rem 3rem;
+      max-width: 950px;
+      margin: auto;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0077b6;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem 2rem;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+    }
+
+    input[type="file"] {
+      padding: 0.4rem;
+    }
+
+    .checkbox-container {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      grid-column: span 2;
+    }
+
+    .checkbox-container input {
+      width: auto;
+      margin-right: 0.5rem;
+    }
+
+    button {
+      margin-top: 2rem;
+      background-color: #0077b6;
+      color: white;
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      grid-column: span 2;
+    }
+
+    button:hover {
+      background-color: #005f87;
+    }
+
+    .success {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: green;
+      font-weight: bold;
+      grid-column: span 2;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem;
+      }
+
+      .form-container {
+        padding: 1rem;
+        border-radius: 10px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .checkbox-container, button, .success {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Fomu ya Usajili wa Mwanafunzi</h2>
+
+    <form onsubmit="handleSubmit(event)">
+      <div class="form-grid">
+        <div>
+          <label>Jina la Kwanza:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Jina la Kati:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Jina la Mwisho:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Jinsia:</label>
+          <select required>
+            <option value="">--Chagua--</option>
+            <option value="Mvulana">Mvulana</option>
+            <option value="Msichana">Msichana</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Tarehe ya Kuzaliwa:</label>
+          <input type="date" required>
+        </div>
+
+        <div>
+          <label>Uraia:</label>
+          <select required>
+            <option value="">--Chagua--</option>
+            <option value="Mtanzania">Mtanzania</option>
+            <option value="Sio Mtanzania">Sio Mtanzania</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Jina la Mzazi/Mlezi:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Namba ya NIDA:</label>
+          <input type="text" required maxlength="23" oninput="formatNIDA(this)">
+        </div>
+
+        <div>
+          <label>Namba ya Simu:</label>
+          <input type="tel" required placeholder="Mfano: 0712345678">
+        </div>
+
+        <div>
+          <label>Mkoa:</label>
+          <select required>
+            <option value="">--Chagua--</option>
+            <option value="Dar es Salaam">Dar es Salaam</option>
+            <option value="Arusha">Arusha</option>
+            <option value="Dodoma">Dodoma (mji mkuu wa nchi)</option>
+            <option value="Mwanza">Mwanza</option>
+            <option value="Mbeya">Mbeya</option>
+            <option value="Morogoro">Morogoro</option>
+            <option value="Tanga">Tanga</option>
+            <option value="Kagera">Kagera</option>
+            <option value="Kigoma">Kigoma</option>
+            <option value="Kilimanjaro">Kilimanjaro</option>
+            <option value="Lindi">Lindi</option>
+            <option value="Manyara">Manyara</option>
+            <option value="Mara">Mara</option>
+            <option value="Njombe">Njombe</option>
+            <option value="Pwani">Pwani</option>
+            <option value="Rukwa">Rukwa</option>
+            <option value="Ruvuma">Ruvuma</option>
+            <option value="Shinyanga">Shinyanga</option>
+            <option value="Singida">Singida</option>
+            <option value="Tabora">Tabora</option>
+            <option value="Geita">Geita</option>
+            <option value="Katavi">Katavi</option>
+            <option value="Simiyu">Simiyu</option>
+            <option value="Songwe">Songwe</option>
+            <option value="Mjini Magharibi">Mjini Magharibi (Zanzibar)</option>
+            <option value="Kaskazini Unguja">Kaskazini Unguja (Zanzibar)</option>
+            <option value="Kusini Unguja">Kusini Unguja (Zanzibar)</option>
+            <option value="Kaskazini Pemba">Kaskazini Pemba (Zanzibar)</option>
+            <option value="Kusini Pemba">Kusini Pemba (Zanzibar)</option>
+            <option value="Iringa">Iringa</option>
+            <option value="Songwe">Songwe</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Wilaya:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Kata:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Kijiji/Mtaa:</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Pasipoti ya Mtoto (Pakia):</label>
+          <input type="file" accept="image/*" required>
+        </div>
+
+        <div>
+          <label>Pasipoti ya Mzazi/Mlezi (Pakia):</label>
+          <input type="file" accept="image/*" required>
+        </div>
+
+        <div>
+          <label>Darasa analotuma maombi:</label>
+          <select required>
+            <option value="">--Chagua--</option>
+            <option value="Awali">Awali</option>
+            <option value="Darasa la Kwanza">Darasa la Kwanza</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Namba ya Cheti cha Kuzaliwa:</label>
+          <input type="text" required>
+        </div>
+
+        <div class="checkbox-container">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">Nimekubali Sera na Masharti ya Usajili</label>
+        </div>
+
+        <button type="submit">Tuma Ombi</button>
+
+        <div class="success" id="successMessage" style="display:none;">
+          ✅ Ombi lako limetumwa. Tafadhali fika SHULENI kwa maelezo kwa kina.
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      document.getElementById("successMessage").style.display = "block";
+      event.target.reset();
+    }
+
+    function formatNIDA(input) {
+      let value = input.value.replace(/[^0-9]/g, '').slice(0, 23);
+      let formatted = '';
+      if (value.length > 0) {
+        formatted += value.slice(0, Math.min(8, value.length));
+      }
+      if (value.length > 8) {
+        formatted += '-' + value.slice(8, Math.min(13, value.length));
+      }
+      if (value.length > 13) {
+        formatted += '-' + value.slice(13, Math.min(17, value.length));
+      }
+      if (value.length > 17) {
+        formatted += '-' + value.slice(17, Math.min(23, value.length));
+      }
+      input.value = formatted;
+    }
+  </script>
+
+</body>
+</html>
