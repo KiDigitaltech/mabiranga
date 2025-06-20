@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hariri Mwanafunzi - Mabiranga Primary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #b2ebf2);
+      padding: 2rem;
+      margin: 0;
+    }
+    .form-container {
+      background: #ffffff;
+      padding: 2rem 3rem;
+      max-width: 950px;
+      margin: auto;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #0077b6;
+      margin-bottom: 1.5rem;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem 2rem;
+    }
+    label {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+    }
+    button {
+      margin-top: 2rem;
+      background-color: #0077b6;
+      color: white;
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      grid-column: span 2;
+    }
+    button:hover {
+      background-color: #005f87;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Hariri Taarifa za Mwanafunzi</h2>
+    <form id="editForm">
+      <div class="form-grid">
+        <input type="hidden" name="studentId">
+        <div><label>Jina la Kwanza:</label><input type="text" name="jinaKwanza" required></div>
+        <div><label>Jina la Kati:</label><input type="text" name="jinaKati" required></div>
+        <div><label>Jina la Mwisho:</label><input type="text" name="jinaMwisho" required></div>
+        <div><label>Jinsia:</label><select name="jinsia" required><option value="">--Chagua--</option><option value="Mvulana">Mvulana</option><option value="Msichana">Msichana</option></select></div>
+        <div><label>Tarehe ya Kuzaliwa:</label><input type="date" name="tareheKuzaliwa" required></div>
+        <div><label>Uraia:</label><select name="uraia" required><option value="">--Chagua--</option><option value="Mtanzania">Mtanzania</option><option value="Sio Mtanzania">Sio Mtanzania</option></select></div>
+        <div><label>Jina la Mzazi/Mlezi:</label><input type="text" name="jinaMzazi" required></div>
+        <div><label>Namba ya NIDA:</label><input type="text" name="nambaNIDA" maxlength="23" required></div>
+        <div><label>Namba ya Simu:</label><input type="tel" name="nambaSimu" required></div>
+        <div><label>Mkoa:</label><input type="text" name="mkoa" required></div>
+        <div><label>Wilaya:</label><input type="text" name="wilaya" required></div>
+        <div><label>Kata:</label><input type="text" name="kata" required></div>
+        <div><label>Kijiji/Mtaa:</label><input type="text" name="kijijiMtaa" required></div>
+        <div><label>Darasa:</label><select name="darasa" required><option value="">--Chagua--</option><option value="Awali">Awali</option><option value="Darasa la Kwanza">Darasa la Kwanza</option></select></div>
+        <div><label>Namba ya Cheti cha Kuzaliwa:</label><input type="text" name="nambaChetiKuzaliwa" required></div>
+        <button type="submit">Hifadhi Mabadiliko</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
+      authDomain: "mabiranga-registration.firebaseapp.com",
+      projectId: "mabiranga-registration",
+      storageBucket: "mabiranga-registration.appspot.com",
+      messagingSenderId: "357508150010",
+      appId: "1:357508150010:web:089ac8dbfd4a5dd06f8f43"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById('editForm');
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const studentRef = db.collection("wanafunzi").doc(id);
+
+    window.onload = async () => {
+      const doc = await studentRef.get();
+      if (!doc.exists) return alert("Taarifa haijapatikana");
+      const data = doc.data();
+      Object.keys(data).forEach(key => {
+        if (form[key]) form[key].value = data[key];
+      });
+      form.studentId.value = id;
+    };
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      delete data.studentId;
+      try {
+        await studentRef.update(data);
+        alert("Taarifa zimehaririwa kikamilifu.");
+        location.href = "admin-dashboard.html";
+      } catch (e) {
+        alert("Kosa: " + e.message);
+      }
+    });
+  </script>
+</body>
+</html>
