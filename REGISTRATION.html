@@ -6,17 +6,13 @@
   <title>Fomu ya Usajili - Mabiranga Primary</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(to right, #e0f7fa, #b2ebf2);
       padding: 2rem;
       margin: 0;
     }
-
     .form-container {
       background: #ffffff;
       padding: 2rem 3rem;
@@ -25,26 +21,22 @@
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
-
     h2 {
       text-align: center;
       color: #0077b6;
       margin-bottom: 1.5rem;
     }
-
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1rem 2rem;
     }
-
     label {
       font-weight: 600;
       color: #333;
       margin-bottom: 0.3rem;
       display: block;
     }
-
     input, select {
       width: 100%;
       padding: 0.7rem;
@@ -53,23 +45,16 @@
       font-size: 1rem;
       background-color: #f9f9f9;
     }
-
-    input[type="file"] {
-      padding: 0.4rem;
-    }
-
     .checkbox-container {
       margin-top: 1.5rem;
       display: flex;
       align-items: center;
       grid-column: span 2;
     }
-
     .checkbox-container input {
       width: auto;
       margin-right: 0.5rem;
     }
-
     button {
       margin-top: 2rem;
       background-color: #0077b6;
@@ -84,11 +69,9 @@
       transition: background-color 0.3s ease;
       grid-column: span 2;
     }
-
     button:hover {
       background-color: #005f87;
     }
-
     .success {
       text-align: center;
       margin-top: 1.5rem;
@@ -96,203 +79,87 @@
       font-weight: bold;
       grid-column: span 2;
     }
-
     @media (max-width: 600px) {
-      body {
-        padding: 1rem;
-      }
-
-      .form-container {
-        padding: 1rem;
-        border-radius: 10px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .checkbox-container, button, .success {
-        grid-column: span 1;
-      }
+      body { padding: 1rem; }
+      .form-container { padding: 1rem; border-radius: 10px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .checkbox-container, button, .success { grid-column: span 1; }
     }
   </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-
   <div class="form-container">
     <h2>Fomu ya Usajili wa Mwanafunzi</h2>
-
-    <form onsubmit="handleSubmit(event)">
+    <form id="registrationForm">
       <div class="form-grid">
-        <div>
-          <label>Jina la Kwanza:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Jina la Kati:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Jina la Mwisho:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Jinsia:</label>
-          <select required>
-            <option value="">--Chagua--</option>
-            <option value="Mvulana">Mvulana</option>
-            <option value="Msichana">Msichana</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Tarehe ya Kuzaliwa:</label>
-          <input type="date" required>
-        </div>
-
-        <div>
-          <label>Uraia:</label>
-          <select required>
-            <option value="">--Chagua--</option>
-            <option value="Mtanzania">Mtanzania</option>
-            <option value="Sio Mtanzania">Sio Mtanzania</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Jina la Mzazi/Mlezi:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Namba ya NIDA:</label>
-          <input type="text" required maxlength="23" oninput="formatNIDA(this)">
-        </div>
-
-        <div>
-          <label>Namba ya Simu:</label>
-          <input type="tel" required placeholder="Mfano: 0712345678">
-        </div>
-
-        <div>
-          <label>Mkoa:</label>
-          <select required>
-            <option value="">--Chagua--</option>
-            <option value="Dar es Salaam">Dar es Salaam</option>
-            <option value="Arusha">Arusha</option>
-            <option value="Dodoma">Dodoma (mji mkuu wa nchi)</option>
-            <option value="Mwanza">Mwanza</option>
-            <option value="Mbeya">Mbeya</option>
-            <option value="Morogoro">Morogoro</option>
-            <option value="Tanga">Tanga</option>
-            <option value="Kagera">Kagera</option>
-            <option value="Kigoma">Kigoma</option>
-            <option value="Kilimanjaro">Kilimanjaro</option>
-            <option value="Lindi">Lindi</option>
-            <option value="Manyara">Manyara</option>
-            <option value="Mara">Mara</option>
-            <option value="Njombe">Njombe</option>
-            <option value="Pwani">Pwani</option>
-            <option value="Rukwa">Rukwa</option>
-            <option value="Ruvuma">Ruvuma</option>
-            <option value="Shinyanga">Shinyanga</option>
-            <option value="Singida">Singida</option>
-            <option value="Tabora">Tabora</option>
-            <option value="Geita">Geita</option>
-            <option value="Katavi">Katavi</option>
-            <option value="Simiyu">Simiyu</option>
-            <option value="Songwe">Songwe</option>
-            <option value="Mjini Magharibi">Mjini Magharibi (Zanzibar)</option>
-            <option value="Kaskazini Unguja">Kaskazini Unguja (Zanzibar)</option>
-            <option value="Kusini Unguja">Kusini Unguja (Zanzibar)</option>
-            <option value="Kaskazini Pemba">Kaskazini Pemba (Zanzibar)</option>
-            <option value="Kusini Pemba">Kusini Pemba (Zanzibar)</option>
-            <option value="Iringa">Iringa</option>
-            <option value="Songwe">Songwe</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Wilaya:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Kata:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Kijiji/Mtaa:</label>
-          <input type="text" required>
-        </div>
-
-        <div>
-          <label>Pasipoti ya Mtoto (Pakia):</label>
-          <input type="file" accept="image/*" required>
-        </div>
-
-        <div>
-          <label>Pasipoti ya Mzazi/Mlezi (Pakia):</label>
-          <input type="file" accept="image/*" required>
-        </div>
-
-        <div>
-          <label>Darasa analotuma maombi:</label>
-          <select required>
-            <option value="">--Chagua--</option>
-            <option value="Awali">Awali</option>
-            <option value="Darasa la Kwanza">Darasa la Kwanza</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Namba ya Cheti cha Kuzaliwa:</label>
-          <input type="text" required>
-        </div>
-
+        <div><label>Jina la Kwanza:</label><input type="text" name="jinaKwanza" required></div>
+        <div><label>Jina la Kati:</label><input type="text" name="jinaKati" required></div>
+        <div><label>Jina la Mwisho:</label><input type="text" name="jinaMwisho" required></div>
+        <div><label>Jinsia:</label><select name="jinsia" required><option value="">--Chagua--</option><option value="Mvulana">Mvulana</option><option value="Msichana">Msichana</option></select></div>
+        <div><label>Tarehe ya Kuzaliwa:</label><input type="date" name="tareheKuzaliwa" required></div>
+        <div><label>Uraia:</label><select name="uraia" required><option value="">--Chagua--</option><option value="Mtanzania">Mtanzania</option><option value="Sio Mtanzania">Sio Mtanzania</option></select></div>
+        <div><label>Jina la Mzazi/Mlezi:</label><input type="text" name="jinaMzazi" required></div>
+        <div><label>Namba ya NIDA:</label><input type="text" name="nambaNIDA" required maxlength="23"></div>
+        <div><label>Namba ya Simu:</label><input type="tel" name="nambaSimu" required placeholder="Mfano: 0712345678"></div>
+        <div><label>Mkoa:</label><input type="text" name="mkoa" required></div>
+        <div><label>Wilaya:</label><input type="text" name="wilaya" required></div>
+        <div><label>Kata:</label><input type="text" name="kata" required></div>
+        <div><label>Kijiji/Mtaa:</label><input type="text" name="kijijiMtaa" required></div>
+        <div><label>Darasa analotuma maombi:</label><select name="darasa" required><option value="">--Chagua--</option><option value="Awali">Awali</option><option value="Darasa la Kwanza">Darasa la Kwanza</option></select></div>
+        <div><label>Namba ya Cheti cha Kuzaliwa:</label><input type="text" name="nambaChetiKuzaliwa" required></div>
         <div class="checkbox-container">
-          <input type="checkbox" id="terms" required>
-          <label for="terms">Nimekubali Sera na Masharti ya Usajili</label>
+          <input type="checkbox" id="terms" required><label for="terms">Nimekubali Sera na Masharti ya Usajili</label>
         </div>
-
         <button type="submit">Tuma Ombi</button>
-
-        <div class="success" id="successMessage" style="display:none;">
-          ✅ Ombi lako limetumwa. Tafadhali fika SHULENI kwa maelezo kwa kina.
-        </div>
+        <div class="success" id="successMessage" style="display:none;">✅ Ombi lako limetumwa. Tafadhali fika SHULENI kwa maelezo kwa kina.</div>
       </div>
     </form>
   </div>
-
   <script>
-    function handleSubmit(event) {
+    const firebaseConfig = {
+      apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
+      authDomain: "mabiranga-registration.firebaseapp.com",
+      projectId: "mabiranga-registration",
+      storageBucket: "mabiranga-registration.firebasestorage.app",
+      messagingSenderId: "357508150010",
+      appId: "1:357508150010:web:089ac8dbfd4a5dd06f8f43",
+      measurementId: "G-4WXXNGGQBW"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    document.getElementById("registrationForm").addEventListener("submit", async function(event) {
       event.preventDefault();
-      document.getElementById("successMessage").style.display = "block";
-      event.target.reset();
-    }
-
-    function formatNIDA(input) {
-      let value = input.value.replace(/[^0-9]/g, '').slice(0, 23);
-      let formatted = '';
-      if (value.length > 0) {
-        formatted += value.slice(0, Math.min(8, value.length));
+      const form = event.target;
+      const data = {
+        jinaKwanza: form.jinaKwanza.value,
+        jinaKati: form.jinaKati.value,
+        jinaMwisho: form.jinaMwisho.value,
+        jinsia: form.jinsia.value,
+        tareheKuzaliwa: form.tareheKuzaliwa.value,
+        uraia: form.uraia.value,
+        jinaMzazi: form.jinaMzazi.value,
+        nambaNIDA: form.nambaNIDA.value,
+        nambaSimu: form.nambaSimu.value,
+        mkoa: form.mkoa.value,
+        wilaya: form.wilaya.value,
+        kata: form.kata.value,
+        kijijiMtaa: form.kijijiMtaa.value,
+        darasa: form.darasa.value,
+        nambaChetiKuzaliwa: form.nambaChetiKuzaliwa.value,
+        tareheUsajili: new Date().toISOString()
+      };
+      try {
+        await db.collection("wanafunzi").add(data);
+        document.getElementById("successMessage").style.display = "block";
+        form.reset();
+      } catch (error) {
+        document.getElementById("successMessage").style.color = "red";
+        document.getElementById("successMessage").textContent = "Kosa: " + error.message;
+        document.getElementById("successMessage").style.display = "block";
       }
-      if (value.length > 8) {
-        formatted += '-' + value.slice(8, Math.min(13, value.length));
-      }
-      if (value.length > 13) {
-        formatted += '-' + value.slice(13, Math.min(17, value.length));
-      }
-      if (value.length > 17) {
-        formatted += '-' + value.slice(17, Math.min(23, value.length));
-      }
-      input.value = formatted;
-    }
+    });
   </script>
-
 </body>
 </html>
