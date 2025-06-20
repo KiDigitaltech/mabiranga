@@ -12,6 +12,56 @@
       padding: 0;
     }
 
+    /* === NAVIGATION STYLE === */
+    nav {
+      background-color: #0077b6;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .nav-links a:hover {
+      background-color: #023e8a;
+    }
+
+    /* Responsive navigation */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+      }
+      .nav-links.show {
+        display: flex;
+      }
+    }
+
     .container {
       max-width: 800px;
       margin: 50px auto;
@@ -68,11 +118,69 @@
         margin-top: 10px;
       }
     }
+
+    /* === FOOTER STYLE === */
+    footer {
+      background-color: #0077b6;
+      color: white;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer-content {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .footer-content h3, .footer-content h4 {
+      margin-top: 0;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 1rem;
+    }
   </style>
 </head>
 <body>
+
+  <!-- === SMART NAVIGATION === -->
+  <nav>
+    <div class="logo">Mabiranga School</div>
+    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="staff.html">Staff</a>
+      <a href="results.html">Results</a>
+      <a href="registration.html">Application</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <!-- === MAIN CONTENT === -->
   <div class="container">
-    <h1>Pakua Matokeo  ya Muhula wa I </h1>
+    <h1>Pakua Matokeo ya Kufunga Muhula wa I Mwezi wa Sita 2025</h1>
     <ul>
       <li>
         <span>Darasa la Awali</span>
@@ -80,33 +188,64 @@
       </li>
       <li>
         <span>Darasa la I</span>
-        <a href="pdfs/matokeo-darasa1.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/1iNWHVAqH7cYMy3Mds3HZboBNwi5ktovP/view?usp=drive_link" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
       <li>
         <span>Darasa la II</span>
-        <a href="pdfs/matokeo-darasa2.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/1JEQd2zsitG4D_SvwR272KUmuUAPQhk_E/view?usp=sharing" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
       <li>
         <span>Darasa la III</span>
-        <a href="pdfs/matokeo-darasa3.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/16ED4zgRK3wFUtu0KKgulLkZjGlyrCk_J/view?usp=sharing" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
       <li>
         <span>Darasa la IV</span>
-        <a href="pdfs/matokeo-darasa4.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/1a_m_xgd7sI8eU4po8ESO01ysPba9dFfi/view?usp=sharing" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
       <li>
         <span>Darasa la V</span>
-        <a href="pdfs/matokeo-darasa5.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/1TpmAR_RDEr6CBl-guhDRivX51fgUffsI/view?usp=sharing" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
       <li>
         <span>Darasa la VI</span>
-        <a href="pdfs/matokeo-darasa6.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/11VUcNG2ARnOAjKaldaUI63JeK6QWFZCM/view?usp=sharing" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
       <li>
         <span>Darasa la VII</span>
-        <a href="pdfs/matokeo-darasa7.pdf" class="download-btn" download>Pakua PDF</a>
+        <a href="https://drive.google.com/file/d/1jazSitQ3EWVzAOl2HrhqdBknd20qrZkw/view?usp=sharing" class="download-btn" target="_blank">Pakua PDF</a>
       </li>
     </ul>
   </div>
+
+  <!-- === SMART FOOTER === -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h3>Mabiranga Primary School</h3>
+        <p>Shule ya msingi iliyoko Moshi DC, inayotoa elimu bora kwa watoto wa Tanzania. <br><em>Elimu ni Uhai.</em></p>
+      </div>
+      <div class="footer-links">
+        <h4>Linki za Haraka</h4>
+        <ul>
+          <li><a href="index.html">🏠 Home</a></li>
+          <li><a href="results.html">📊 Matokeo</a></li>
+          <li><a href="registration.html">📝 Usajili</a></li>
+          <li><a href="contact.html">📞 Mawasiliano</a></li>
+          <li><a href="login.html">🔐 Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Mabiranga Primary School. Haki zote zimehifadhiwa.</p>
+    </div>
+  </footer>
+
+  <!-- === TOGGLE SCRIPT === -->
+  <script>
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("show");
+    }
+  </script>
+
 </body>
 </html>
