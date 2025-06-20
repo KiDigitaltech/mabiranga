@@ -1,165 +1,199 @@
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kuhusu Sisi - Shule ya Msingi Mabiranga</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kuhusu Sisi - Mabiranga Primary School</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      line-height: 1.6;
       margin: 0;
       padding: 0;
-      background-color: #f0f8ff;
+      background-color: #e6f4f8;
     }
+
+    nav {
+      background-color: #0077b6;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .nav-links a:hover {
+      background-color: #023e8a;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 1rem;
+      }
+      .nav-links.show {
+        display: flex;
+      }
+    }
+
     .container {
-      max-width: 1000px;
-      margin: 40px auto;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
       background: white;
-      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
     }
-    h1, h2, h3 {
+
+    h1 {
+      text-align: center;
       color: #006494;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      margin-bottom: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 8px;
-      text-align: center;
-    }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    ul li::before {
-      content: "? ";
+
+    h2 {
       color: #0077b6;
+      margin-top: 2rem;
+    }
+
+    p {
+      line-height: 1.7;
+      color: #333;
+    }
+
+    footer {
+      background-color: #0077b6;
+      color: white;
+      padding: 2rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .footer-content {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .footer-content h3, .footer-content h4 {
+      margin-top: 0;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 1rem;
     }
   </style>
 </head>
 <body>
 
+  <!-- === NAVIGATION === -->
+  <nav>
+    <div class="logo">Mabiranga School</div>
+    <div class="menu-toggle" onclick="toggleMenu()">&#9776;</div>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="staff.html">Staff</a>
+      <a href="results.html">Results</a>
+      <a href="registration.html">Application</a>
+      <a href="contact.html">Contact</a>
+      <a href="about.html">About</a>
+    </div>
+  </nav>
+
+  <!-- === ABOUT SECTION === -->
   <div class="container">
-    <h1>Kuhusu Shule ya Msingi Mabiranga</h1>
+    <h1>Kuhusu Shule Yetu</h1>
 
-    <p>Shule ya Msingi Mabiranga ilianzishwa mwaka 2005 baada ya Shule ya Msingi Ghona kugawanywa. Tarehe 19 Septemba 2005, shule hii ilisajiliwa na kupewa namba ya usajili <strong>KL/02/2/246</strong>. Hadi sasa, shule ina jumla ya wanafunzi <strong>345</strong>. Jina la shule linatokana na <strong>Mlima Mabiranga</strong> uliopo karibu na shule.</p>
+    <h2>Historia Yetu</h2>
+    <p>Mabiranga Primary School ni shule ya msingi iliyopo katika Wilaya ya Moshi Vijijini, Mkoa wa Kilimanjaro.Shule ya Msingi Mabiranga ilianzishwa mwaka 2005 baada ya Shule ya Msingi Ghona kugawanywa. Tarehe 19 Septemba 2005, shule hii ilisajiliwa na kupewa namba ya usajili KL/02/2/246. Jina la shule linatokana na Mlima Mabiranga uliopo karibu na shule. Tangu kuanzishwa kwake, shule hii imejikita katika kutoa elimu bora, yenye msingi wa maadili mema na uzalendo kwa wanafunzi wake.</p>
 
-    <h2>Mazingira ya Kijiografia</h2>
-    <p>Shule ya Msingi Mabiranga inapatikana katika:</p>
+    <h2>Maono Yetu</h2>
+    <p>Kuandaa kizazi cha wanafunzi wenye maarifa, ujuzi na nidhamu, kwa ajili ya maendeleo ya jamii na taifa kwa ujumla.</p>
+
+    <h2>Dira Yetu</h2>
+    <p>Kuwa shule ya msingi inayotoa elimu bora, jumuishi na shirikishi kwa watoto wote bila ubaguzi.</p>
+
+    <h2>Maadili Yetu</h2>
     <ul>
-      <li>Mkoa: Kilimanjaro</li>
-      <li>Wilaya: Moshi</li>
-      <li>Tarafa: Vunjo Magharibi</li>
-      <li>Kata: Kahe Mashariki</li>
-      <li>Kijiji: Ghona</li>
+      <li>⏺ Heshima na Nidhamu</li>
+      <li>⏺ Uwajibikaji</li>
+      <li>⏺ Ushirikiano kati ya wazazi, walimu na jamii</li>
+      <li>⏺ Upendo na huruma kwa wote</li>
     </ul>
 
-    <h2>Mipaka ya Shule</h2>
-    <ul>
-      <li>Kaskazini: Korongo</li>
-      <li>Mashariki: Barabara Kuu ya Arusha – Dar es Salaam</li>
-      <li>Magharibi: Ndugu Msangi</li>
-      <li>Kusini: Shule ya Msingi Ghona</li>
-    </ul>
-
-    <h2>Taarifa za Waalimu</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Elimu</th>
-          <th>Wanaume</th>
-          <th>Wanawake</th>
-          <th>Jumla</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Shahada</td>
-          <td>1</td>
-          <td>1</td>
-          <td>2</td>
-        </tr>
-        <tr>
-          <td>Stashahada</td>
-          <td>0</td>
-          <td>1</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>Astashahada</td>
-          <td>0</td>
-          <td>5</td>
-          <td>5</td>
-        </tr>
-        <tr>
-          <th>Jumla</th>
-          <th>1</th>
-          <th>7</th>
-          <th>8</th>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2>Taarifa za Wanafunzi</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Darasa</th>
-          <th>Wavulana</th>
-          <th>Wasichana</th>
-          <th>Jumla</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Awali</td><td>18</td><td>22</td><td>40</td></tr>
-        <tr><td>I</td><td>28</td><td>43</td><td>71</td></tr>
-        <tr><td>II</td><td>19</td><td>25</td><td>44</td></tr>
-        <tr><td>III</td><td>30</td><td>24</td><td>54</td></tr>
-        <tr><td>IV</td><td>15</td><td>21</td><td>36</td></tr>
-        <tr><td>V</td><td>24</td><td>19</td><td>43</td></tr>
-        <tr><td>VI</td><td>12</td><td>20</td><td>32</td></tr>
-        <tr><td>VII</td><td>11</td><td>14</td><td>25</td></tr>
-        <tr><th>Jumla</th><th>157</th><th>188</th><th>345</th></tr>
-      </tbody>
-    </table>
-
-    <h2>Matokeo ya Kitaaluma (Darasa la VII)</h2>
-    <p>Taarifa ya miaka mitatu iliyopita:</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Mwaka</th>
-          <th>Wavulana</th>
-          <th>Wasichana</th>
-          <th>Jumla</th>
-          <th>Wavulana Waliofaulu</th>
-          <th>Wasichana Waliofaulu</th>
-          <th>Jumla Waliofaulu</th>
-          <th>Asilimia</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>2022</td><td>17</td><td>25</td><td>42</td><td>13</td><td>24</td><td>37</td><td>88%</td>
-        </tr>
-        <tr>
-          <td>2023</td><td>9</td><td>20</td><td>29</td><td>5</td><td>16</td><td>21</td><td>72%</td>
-        </tr>
-        <tr>
-          <td>2024</td><td>11</td><td>14</td><td>25</td><td>7</td><td>14</td><td>21</td><td>84%</td>
-        </tr>
-      </tbody>
-    </table>
+    <h2>Ujumbe kwa Jamii</h2>
+    <p>Tunawahamasisha wazazi na walezi kushirikiana nasi kwa karibu katika kuhakikisha watoto wanapata elimu bora, kwa kuwatunza, kuwahimiza na kushiriki katika shughuli mbalimbali za shule.</p>
   </div>
+
+  <!-- === FOOTER === -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h3>Mabiranga Primary School</h3>
+        <p>Shule ya msingi iliyoko Moshi DC, inayotoa elimu bora kwa watoto wa Tanzania. <br><em>Elimu ni Uhai.</em></p>
+      </div>
+      <div class="footer-links">
+        <h4>Linki za Haraka</h4>
+        <ul>
+          <li><a href="index.html">🏠 Home</a></li>
+          <li><a href="results.html">📊 Matokeo</a></li>
+          <li><a href="registration.html">📝 Usajili</a></li>
+          <li><a href="contact.html">📞 Mawasiliano</a></li>
+          <li><a href="login.html">🔐 Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Mabiranga Primary School. Haki zote zimehifadhiwa.</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("navLinks").classList.toggle("show");
+    }
+  </script>
 
 </body>
 </html>
