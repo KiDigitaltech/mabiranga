@@ -44,7 +44,7 @@
     main {
       padding: 2rem;
     }
-    #searchInput {
+    #searchInput, #darasaFilter {
       display: block;
       margin: 0 auto 1rem;
       padding: 0.6rem 1rem;
@@ -115,6 +115,16 @@
   </header>
 
   <main>
+    <div style="margin-bottom: 1rem;">
+      <strong>Wasichana: <span id="wasichanaCount">0</span></strong> |
+      <strong>Wavulana: <span id="wavulanaCount">0</span></strong>
+    </div>
+
+    <label for="darasaFilter">Chagua Darasa: </label>
+    <select id="darasaFilter">
+      <option value="">-- Madarasa Yote --</option>
+    </select>
+
     <input type="text" id="searchInput" placeholder="Tafuta mwanafunzi kwa jina...">
     <button id="refreshBtn">Pakia Data Tena</button>
     <button id="downloadBtn">Pakua CSV</button>
@@ -123,126 +133,117 @@
         <tr>
           <th>Jina Kamili</th>
           <th>Jinsia</th>
-          <th>Tarehe ya Kuzaliwa</th>
-          <th>Uraia</th>
-          <th>Mzazi</th>
-          <th>NIDA</th>
-          <th>Simu</th>
-          <th>Mkoa</th>
-          <th>Wilaya</th>
-          <th>Kata</th>
-          <th>Kijiji/Mtaa</th>
-          <th>Pasipoti Mtoto</th>
-          <th>Pasipoti Mzazi</th>
           <th>Darasa</th>
           <th>Cheti</th>
           <th>Tarehe Usajili</th>
+          <th>Vitendo</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td colspan="16" style="text-align:center;">Inapakia data...</td></tr>
+        <tr><td colspan="6" style="text-align:center;">Inapakia data...</td></tr>
       </tbody>
     </table>
   </main>
 
   <script>
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
       authDomain: "mabiranga-registration.firebaseapp.com",
       projectId: "mabiranga-registration",
-      storageBucket: "mabiranga-registration.firebasestorage.app",
+      storageBucket: "mabiranga-registration.appspot.com",
       messagingSenderId: "357508150010",
       appId: "1:357508150010:web:089ac8dbfd4a5dd06f8f43",
       measurementId: "G-4WXXNGGQBW"
     };
     firebase.initializeApp(firebaseConfig);
 
-    // Variables to hold elements and data
-    let tableBody;
-    let refreshBtn;
-    let searchInput;
-    let downloadBtn;
-    let logoutBtn;
+    const db = firebase.firestore();
     let allStudents = [];
 
-    // Run after DOM is loaded
     document.addEventListener("DOMContentLoaded", () => {
-      // Get elements
-      tableBody = document.querySelector("#studentsTable tbody");
-      refreshBtn = document.getElementById("refreshBtn");
-      searchInput = document.getElementById("searchInput");
-      downloadBtn = document.getElementById("downloadBtn");
-      logoutBtn = document.getElementById("logoutBtn");
+      const searchInput = document.getElementById("searchInput");
+      const darasaFilter = document.getElementById("darasaFilter");
+      document.getElementById("refreshBtn").onclick = loadStudents;
+      document.getElementById("downloadBtn").onclick = downloadCSV;
+      document.getElementById("logoutBtn").onclick = () => firebase.auth().signOut().then(() => location.href = "login.html");
 
-      // Attach event listeners
-      refreshBtn.addEventListener("click", loadStudents);
-      searchInput.addEventListener("input", () => {
-        const term = searchInput.value.toLowerCase();
-        const filtered = allStudents.filter(d => (`${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`).toLowerCase().includes(term));
-        displayStudents(filtered);
-      });
-      downloadBtn.addEventListener("click", downloadCSV);
-      logoutBtn.addEventListener("click", logout);
-
-      // Firebase Auth state listener
       firebase.auth().onAuthStateChanged(user => {
-        if (!user) {
-          window.location.href = "login.html";
-        } else {
-          loadStudents();
-        }
+        if (user) loadStudents();
+        else location.href = "login.html";
       });
+
+      searchInput.addEventListener("input", filterStudents);
+      darasaFilter.addEventListener("change", filterStudents);
     });
 
-    // Load students data from Firestore
     async function loadStudents() {
-      tableBody.innerHTML = `<tr><td colspan="16" style="text-align:center;">Inapakia data...</td></tr>`;
+      const tableBody = document.querySelector("#studentsTable tbody");
+      tableBody.innerHTML = '<tr><td colspan="6">Inapakia...</td></tr>';
       try {
-        const snapshot = await firebase.firestore().collection("wanafunzi").orderBy("tareheUsajili", "desc").get();
-        allStudents = snapshot.docs.map(doc => doc.data());
+        const snapshot = await db.collection("wanafunzi").orderBy("tareheUsajili", "desc").get();
+        allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        const wasichana = allStudents.filter(s => s.jinsia === 'Msichana').length;
+        const wavulana = allStudents.filter(s => s.jinsia === 'Mvulana').length;
+        document.getElementById("wasichanaCount").innerText = wasichana;
+        document.getElementById("wavulanaCount").innerText = wavulana;
+
+        const darasaSet = new Set(allStudents.map(s => s.darasa).filter(Boolean));
+        const darasaFilter = document.getElementById("darasaFilter");
+        darasaFilter.innerHTML = `<option value="">-- Madarasa Yote --</option>` + [...darasaSet].sort().map(d => `<option value="${d}">${d}</option>`).join('');
+
         displayStudents(allStudents);
-      } catch (error) {
-        tableBody.innerHTML = `<tr><td colspan="16" style="color:red; text-align:center;">Kosa: ${error.message}</td></tr>`;
+      } catch (e) {
+        tableBody.innerHTML = `<tr><td colspan="6">${e.message}</td></tr>`;
       }
     }
 
-    // Display students in table
     function displayStudents(data) {
-      if (data.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="16" style="text-align:center;">Hakuna wanafunzi waliosajiliwa.</td></tr>`;
-        return;
-      }
-      tableBody.innerHTML = data.map(d => {
-        const jinaKamili = `${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`.trim();
-        return `
-          <tr>
-            <td>${jinaKamili}</td>
-            <td>${d.jinsia || ""}</td>
-            <td>${d.tareheKuzaliwa || ""}</td>
-            <td>${d.uraia || ""}</td>
-            <td>${d.jinaMzazi || ""}</td>
-            <td>${d.nambaNIDA || ""}</td>
-            <td>${d.nambaSimu || ""}</td>
-            <td>${d.mkoa || ""}</td>
-            <td>${d.wilaya || ""}</td>
-            <td>${d.kata || ""}</td>
-            <td>${d.kijijiMtaa || ""}</td>
-            <td>${d.pasipotiMtotoURL ? `<a href="${d.pasipotiMtotoURL}" target="_blank"><img src="${d.pasipotiMtotoURL}" class="passport"/></a>` : ""}</td>
-            <td>${d.pasipotiMzaziURL ? `<a href="${d.pasipotiMzaziURL}" target="_blank"><img src="${d.pasipotiMzaziURL}" class="passport"/></a>` : ""}</td>
-            <td>${d.darasa || ""}</td>
-            <td>${d.nambaChetiKuzaliwa || ""}</td>
-            <td>${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleString() : ""}</td>
-          </tr>`;
-      }).join('');
+      const tableBody = document.querySelector("#studentsTable tbody");
+      if (!data.length) return tableBody.innerHTML = '<tr><td colspan="6">Hakuna data</td></tr>';
+      tableBody.innerHTML = data.map(d => `
+        <tr>
+          <td>${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
+          <td>${d.jinsia || ''}</td>
+          <td>${d.darasa || ''}</td>
+          <td>${d.nambaChetiKuzaliwa || ''}</td>
+          <td>${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
+          <td>
+            <button onclick="editStudent('${d.id}')">Hariri</button>
+            <button onclick="deleteStudent('${d.id}')">Futa</button>
+          </td>
+        </tr>`).join('');
     }
 
-    // Download CSV
+    function filterStudents() {
+      const term = document.getElementById("searchInput").value.toLowerCase();
+      const darasa = document.getElementById("darasaFilter").value;
+      const filtered = allStudents.filter(d => {
+        const matchName = (`${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`).toLowerCase().includes(term);
+        return matchName && (!darasa || d.darasa === darasa);
+      });
+      displayStudents(filtered);
+    }
+
+    function deleteStudent(id) {
+      if (confirm("Una uhakika unataka kufuta mwanafunzi huyu?")) {
+        db.collection("wanafunzi").doc(id).delete().then(() => {
+          alert("Mwanafunzi amefutwa.");
+          loadStudents();
+        });
+      }
+    }
+
+    function editStudent(id) {
+      window.location.href = `edit.html?id=${id}`;
+    }
+
     function downloadCSV() {
-      let csv = "Jina Kamili,Jinsia,Tarehe ya Kuzaliwa,Uraia,Mzazi,NIDA,Simu,Mkoa,Wilaya,Kata,Kijiji,MtotoURL,MzaziURL,Darasa,Cheti,Tarehe Usajili\n";
+      let csv = "Jina Kamili,Jinsia,Darasa,Cheti,Tarehe Usajili\n";
       allStudents.forEach(d => {
-        const jinaKamili = `${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`;
-        csv += `"${jinaKamili}","${d.jinsia || ''}","${d.tareheKuzaliwa || ''}","${d.uraia || ''}","${d.jinaMzazi || ''}","${d.nambaNIDA || ''}","${d.nambaSimu || ''}","${d.mkoa || ''}","${d.wilaya || ''}","${d.kata || ''}","${d.kijijiMtaa || ''}","${d.pasipotiMtotoURL || ''}","${d.pasipotiMzaziURL || ''}","${d.darasa || ''}","${d.nambaChetiKuzaliwa || ''}","${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleString() : ''}"\n`;
+        const jina = [d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ");
+        const tarehe = d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : '';
+        csv += `"${jina}","${d.jinsia}","${d.darasa}","${d.nambaChetiKuzaliwa}","${tarehe}"\n`;
       });
       const blob = new Blob([csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
@@ -251,13 +252,6 @@
       a.download = "wanafunzi.csv";
       a.click();
       URL.revokeObjectURL(url);
-    }
-
-    // Logout function
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        window.location.href = "login.html";
-      });
     }
   </script>
 </body>
