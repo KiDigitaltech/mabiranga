@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - Mabiranga Primary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #e6f7ff;
+    }
+    header {
+      background-color: #0077b6;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header a {
+      color: white;
+      text-decoration: none;
+      margin-right: 1rem;
+      font-weight: bold;
+    }
+    header a:hover {
+      text-decoration: underline;
+    }
+    header button {
+      background: white;
+      color: #0077b6;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    main {
+      padding: 2rem;
+    }
+    #searchInput {
+      display: block;
+      margin: 0 auto 1rem;
+      padding: 0.6rem 1rem;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    #refreshBtn, #downloadBtn {
+      display: inline-block;
+      margin: 0.5rem 1rem 1rem 0;
+      padding: 0.8rem 1.5rem;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th {
+      background-color: #0077b6;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tr:nth-child(even) {
+      background-color: #f4faff;
+    }
+    img.passport {
+      max-width: 80px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      th, td {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Dashboard ya Usajili - Mabiranga Primary</h1>
+    <div>
+      <a href="change-password.html">Badili Nenosiri</a>
+      <button id="logoutBtn">Toka</button>
+    </div>
+  </header>
+
+  <main>
+    <input type="text" id="searchInput" placeholder="Tafuta mwanafunzi kwa jina...">
+    <button id="refreshBtn">Pakia Data Tena</button>
+    <button id="downloadBtn">Pakua CSV</button>
+    <table id="studentsTable">
+      <thead>
+        <tr>
+          <th>Jina Kamili</th>
+          <th>Jinsia</th>
+          <th>Tarehe ya Kuzaliwa</th>
+          <th>Uraia</th>
+          <th>Mzazi</th>
+          <th>NIDA</th>
+          <th>Simu</th>
+          <th>Mkoa</th>
+          <th>Wilaya</th>
+          <th>Kata</th>
+          <th>Kijiji/Mtaa</th>
+          <th>Pasipoti Mtoto</th>
+          <th>Pasipoti Mzazi</th>
+          <th>Darasa</th>
+          <th>Cheti</th>
+          <th>Tarehe Usajili</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="16" style="text-align:center;">Inapakia data...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
+      authDomain: "mabiranga-registration.firebaseapp.com",
+      projectId: "mabiranga-registration",
+      storageBucket: "mabiranga-registration.firebasestorage.app",
+      messagingSenderId: "357508150010",
+      appId: "1:357508150010:web:089ac8dbfd4a5dd06f8f43",
+      measurementId: "G-4WXXNGGQBW"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Variables to hold elements and data
+    let tableBody;
+    let refreshBtn;
+    let searchInput;
+    let downloadBtn;
+    let logoutBtn;
+    let allStudents = [];
+
+    // Run after DOM is loaded
+    document.addEventListener("DOMContentLoaded", () => {
+      // Get elements
+      tableBody = document.querySelector("#studentsTable tbody");
+      refreshBtn = document.getElementById("refreshBtn");
+      searchInput = document.getElementById("searchInput");
+      downloadBtn = document.getElementById("downloadBtn");
+      logoutBtn = document.getElementById("logoutBtn");
+
+      // Attach event listeners
+      refreshBtn.addEventListener("click", loadStudents);
+      searchInput.addEventListener("input", () => {
+        const term = searchInput.value.toLowerCase();
+        const filtered = allStudents.filter(d => (`${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`).toLowerCase().includes(term));
+        displayStudents(filtered);
+      });
+      downloadBtn.addEventListener("click", downloadCSV);
+      logoutBtn.addEventListener("click", logout);
+
+      // Firebase Auth state listener
+      firebase.auth().onAuthStateChanged(user => {
+        if (!user) {
+          window.location.href = "login.html";
+        } else {
+          loadStudents();
+        }
+      });
+    });
+
+    // Load students data from Firestore
+    async function loadStudents() {
+      tableBody.innerHTML = `<tr><td colspan="16" style="text-align:center;">Inapakia data...</td></tr>`;
+      try {
+        const snapshot = await firebase.firestore().collection("wanafunzi").orderBy("tareheUsajili", "desc").get();
+        allStudents = snapshot.docs.map(doc => doc.data());
+        displayStudents(allStudents);
+      } catch (error) {
+        tableBody.innerHTML = `<tr><td colspan="16" style="color:red; text-align:center;">Kosa: ${error.message}</td></tr>`;
+      }
+    }
+
+    // Display students in table
+    function displayStudents(data) {
+      if (data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="16" style="text-align:center;">Hakuna wanafunzi waliosajiliwa.</td></tr>`;
+        return;
+      }
+      tableBody.innerHTML = data.map(d => {
+        const jinaKamili = `${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`.trim();
+        return `
+          <tr>
+            <td>${jinaKamili}</td>
+            <td>${d.jinsia || ""}</td>
+            <td>${d.tareheKuzaliwa || ""}</td>
+            <td>${d.uraia || ""}</td>
+            <td>${d.jinaMzazi || ""}</td>
+            <td>${d.nambaNIDA || ""}</td>
+            <td>${d.nambaSimu || ""}</td>
+            <td>${d.mkoa || ""}</td>
+            <td>${d.wilaya || ""}</td>
+            <td>${d.kata || ""}</td>
+            <td>${d.kijijiMtaa || ""}</td>
+            <td>${d.pasipotiMtotoURL ? `<a href="${d.pasipotiMtotoURL}" target="_blank"><img src="${d.pasipotiMtotoURL}" class="passport"/></a>` : ""}</td>
+            <td>${d.pasipotiMzaziURL ? `<a href="${d.pasipotiMzaziURL}" target="_blank"><img src="${d.pasipotiMzaziURL}" class="passport"/></a>` : ""}</td>
+            <td>${d.darasa || ""}</td>
+            <td>${d.nambaChetiKuzaliwa || ""}</td>
+            <td>${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleString() : ""}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    // Download CSV
+    function downloadCSV() {
+      let csv = "Jina Kamili,Jinsia,Tarehe ya Kuzaliwa,Uraia,Mzazi,NIDA,Simu,Mkoa,Wilaya,Kata,Kijiji,MtotoURL,MzaziURL,Darasa,Cheti,Tarehe Usajili\n";
+      allStudents.forEach(d => {
+        const jinaKamili = `${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`;
+        csv += `"${jinaKamili}","${d.jinsia || ''}","${d.tareheKuzaliwa || ''}","${d.uraia || ''}","${d.jinaMzazi || ''}","${d.nambaNIDA || ''}","${d.nambaSimu || ''}","${d.mkoa || ''}","${d.wilaya || ''}","${d.kata || ''}","${d.kijijiMtaa || ''}","${d.pasipotiMtotoURL || ''}","${d.pasipotiMzaziURL || ''}","${d.darasa || ''}","${d.nambaChetiKuzaliwa || ''}","${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleString() : ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "wanafunzi.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Logout function
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+  </script>
+</body>
+</html>
