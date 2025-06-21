@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wanafunzi Walioidhinishwa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0077b6;
+      margin-bottom: 1rem;
+    }
+
+    .controls, .summary {
+      max-width: 600px;
+      margin: 0 auto 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .controls input {
+      padding: 0.6rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 60%;
+      font-size: 1rem;
+    }
+
+    .controls button {
+      background: #0077b6;
+      color: white;
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .summary {
+      text-align: center;
+      flex-direction: column;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background-color: #0077b6;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f4faff;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead {
+        display: none;
+      }
+      tr {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background: white;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+      td:last-child {
+        border-bottom: none;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #0077b6;
+      }
+    }
+
+    @media print {
+      .controls, h1, .summary {
+        display: none;
+      }
+      table {
+        box-shadow: none;
+      }
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <!-- jsPDF and autoTable -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <h1>Wanafunzi Walioidhinishwa</h1>
+
+  <div class="summary">
+    <div id="totalCount">Jumla ya Wanafunzi: ...</div>
+    <div id="genderSummary">Wasichana: ... | Wavulana: ...</div>
+    <div id="classSummary">Madarasa: ...</div>
+  </div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Tafuta kwa jina..." />
+    <button onclick="window.print()">Chapisha</button>
+    <button onclick="downloadCSV()">Pakua CSV</button>
+    <button onclick="downloadPDF()">Pakua PDF</button>
+  </div>
+
+  <table id="approvedTable">
+    <thead>
+      <tr>
+        <th>Jina Kamili</th>
+        <th>Darasa</th>
+        <th>Jinsia</th>
+        <th>ID Number</th>
+        <th>Tarehe Usajili</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="5" style="text-align:center;">Inapakia...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
+      authDomain: "mabiranga-registration.firebaseapp.com",
+      projectId: "mabiranga-registration",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let allApproved = [];
+
+    const tableBody = document.querySelector("#approvedTable tbody");
+    const searchInput = document.getElementById("searchInput");
+
+    function displayApproved(data) {
+      if (!data.length) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Hakuna wanafunzi waliothibitishwa.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = data.map(d => `
+        <tr>
+          <td data-label="Jina Kamili">${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
+          <td data-label="Darasa">${d.darasa || ''}</td>
+          <td data-label="Jinsia">${d.jinsia || ''}</td>
+          <td data-label="ID Number">${d.idNumber || 'Hakuna'}</td>
+          <td data-label="Tarehe Usajili">${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    function updateSummary(data) {
+      document.getElementById("totalCount").innerText = `Jumla ya Wanafunzi: ${data.length}`;
+      const wasichana = data.filter(d => d.jinsia?.toLowerCase() === "msichana").length;
+      const wavulana = data.filter(d => d.jinsia?.toLowerCase() === "mvulana").length;
+      document.getElementById("genderSummary").innerText = `Wasichana: ${wasichana} | Wavulana: ${wavulana}`;
+      
+      const madarasa = [...new Set(data.map(d => d.darasa).filter(Boolean))].sort().join(", ");
+      document.getElementById("classSummary").innerText = `Madarasa: ${madarasa}`;
+    }
+
+    function filterApproved() {
+      const term = searchInput.value.toLowerCase();
+      const filtered = allApproved.filter(d => {
+        const jina = `${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`.toLowerCase();
+        return jina.includes(term);
+      });
+      displayApproved(filtered);
+      updateSummary(filtered);
+    }
+
+    function downloadCSV() {
+      let csv = "Jina Kamili,Darasa,Jinsia,ID Number,Tarehe Usajili\n";
+      allApproved.forEach(d => {
+        const jina = [d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ");
+        const tarehe = d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : '';
+        csv += `"${jina}","${d.darasa}","${d.jinsia}","${d.idNumber}","${tarehe}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "wanafunzi-approved.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("Orodha ya Wanafunzi Walioidhinishwa", 14, 15);
+
+      const tableData = allApproved.map(d => [
+        [d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" "),
+        d.darasa || '',
+        d.jinsia || '',
+        d.idNumber || '',
+        d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''
+      ]);
+
+      doc.autoTable({
+        head: [["Jina Kamili", "Darasa", "Jinsia", "ID Number", "Tarehe Usajili"]],
+        body: tableData,
+        startY: 25,
+        styles: {
+          fontSize: 10,
+        },
+        headStyles: {
+          fillColor: [0, 119, 182],
+        }
+      });
+
+      doc.save("wanafunzi-approved.pdf");
+    }
+
+    searchInput.addEventListener("input", filterApproved);
+
+    db.collection("wanafunzi").where("approved", "==", true).get().then(snapshot => {
+      allApproved = snapshot.docs.map(doc => doc.data());
+      displayApproved(allApproved);
+      updateSummary(allApproved);
+    }).catch(e => {
+      tableBody.innerHTML = `<tr><td colspan="5">Kosa: ${e.message}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ID ya Mwanafunzi</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #e6f7ff;
+      text-align: center;
+      padding: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      display: inline-block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    h1 {
+      color: #0077b6;
+    }
+    .id {
+      font-size: 1.5rem;
+      color: green;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h1>Mwanafunzi Ameidhinishwa</h1>
+    <p>Jina Kamili: <span id="fullName"></span></p>
+    <p class="id">ID Number: <span id="studentId"></span></p>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
+      authDomain: "mabiranga-registration.firebaseapp.com",
+      projectId: "mabiranga-registration",
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const studentId = urlParams.get("id");
+
+    if (studentId) {
+      db.collection("wanafunzi").doc(studentId).get().then(doc => {
+        const data = doc.data();
+        document.getElementById("fullName").innerText = [data.jinaKwanza, data.jinaKati, data.jinaMwisho].filter(Boolean).join(" ");
+        document.getElementById("studentId").innerText = data.idNumber || 'Haijapatikana';
+      });
+    }
+  </script>
+</body>
+</html>
