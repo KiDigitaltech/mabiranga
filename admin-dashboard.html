@@ -18,6 +18,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
     }
     header h1 {
       margin: 0;
@@ -87,24 +88,45 @@
     tr:nth-child(even) {
       background-color: #f4faff;
     }
-    img.passport {
-      max-width: 80px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+
     @media (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
       }
-      th, td {
-        padding: 0.5rem;
+      thead {
+        display: none;
+      }
+      tr {
+        margin-bottom: 1rem;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 1rem;
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+      td:last-child {
+        border-bottom: none;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #0077b6;
       }
     }
   </style>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 </head>
+
 <body>
   <header>
     <h1>Dashboard ya Usajili - Mabiranga Primary</h1>
@@ -128,6 +150,7 @@
     <input type="text" id="searchInput" placeholder="Tafuta mwanafunzi kwa jina...">
     <button id="refreshBtn">Pakia Data Tena</button>
     <button id="downloadBtn">Pakua CSV</button>
+
     <table id="studentsTable">
       <thead>
         <tr>
@@ -180,7 +203,7 @@
       const tableBody = document.querySelector("#studentsTable tbody");
       tableBody.innerHTML = '<tr><td colspan="6">Inapakia...</td></tr>';
       try {
-        const snapshot = await db.collection("wanafunzi").orderBy("tareheUsajili", "desc").get();
+        const snapshot = await db.collection("wanafunzi").get();
         allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         const wasichana = allStudents.filter(s => s.jinsia === 'Msichana').length;
@@ -203,12 +226,12 @@
       if (!data.length) return tableBody.innerHTML = '<tr><td colspan="6">Hakuna data</td></tr>';
       tableBody.innerHTML = data.map(d => `
         <tr>
-          <td>${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
-          <td>${d.jinsia || ''}</td>
-          <td>${d.darasa || ''}</td>
-          <td>${d.nambaChetiKuzaliwa || ''}</td>
-          <td>${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
-          <td>
+          <td data-label="Jina Kamili">${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
+          <td data-label="Jinsia">${d.jinsia || ''}</td>
+          <td data-label="Darasa">${d.darasa || ''}</td>
+          <td data-label="Cheti">${d.nambaChetiKuzaliwa || ''}</td>
+          <td data-label="Tarehe Usajili">${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
+          <td data-label="Vitendo">
             <button onclick="editStudent('${d.id}')">Hariri</button>
             <button onclick="deleteStudent('${d.id}')">Futa</button>
           </td>
