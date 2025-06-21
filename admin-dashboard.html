@@ -10,6 +10,7 @@
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background: #e6f7ff;
+      color: #333;
     }
     header {
       background-color: #0077b6;
@@ -41,9 +42,15 @@
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    header button:hover {
+      background-color: #d6f0ff;
     }
     main {
       padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
     }
     #searchInput, #darasaFilter {
       display: block;
@@ -54,6 +61,7 @@
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 1rem;
+      box-sizing: border-box;
     }
     #refreshBtn, #downloadBtn, #showApprovedBtn {
       display: inline-block;
@@ -66,34 +74,76 @@
       cursor: pointer;
       font-weight: bold;
       transition: background-color 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 119, 182, 0.4);
     }
     #refreshBtn:hover, #downloadBtn:hover, #showApprovedBtn:hover {
-      background-color: #005f8d;
+      background-color: #005f86;
+      box-shadow: 0 6px 10px rgba(0, 95, 134, 0.6);
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       background: white;
+      border-radius: 8px;
+      overflow: hidden;
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 12px 15px;
       text-align: left;
       font-size: 0.9rem;
+      vertical-align: middle;
     }
     th {
       background-color: #0077b6;
       color: white;
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: 2;
+      user-select: none;
     }
     tr:nth-child(even) {
       background-color: #f4faff;
     }
+    button.edit, button.delete, button.approve {
+      padding: 6px 12px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: white;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    button.edit {
+      background-color: #2a9d8f;
+    }
+    button.edit:hover {
+      background-color: #217a72;
+    }
+    button.delete {
+      background-color: #e76f51;
+    }
+    button.delete:hover {
+      background-color: #c2513d;
+    }
+    button.approve {
+      background-color: #264653;
+    }
+    button.approve:hover {
+      background-color: #1b2e36;
+    }
+    span.approved-label {
+      color: green;
+      font-weight: 700;
+      font-size: 0.9rem;
+      user-select: none;
+    }
 
-    /* Responsive table */
+    /* Responsive table for mobile */
     @media (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -120,101 +170,90 @@
       }
       td::before {
         content: attr(data-label);
-        font-weight: bold;
+        font-weight: 700;
         color: #0077b6;
+        width: 40%;
       }
     }
 
-    /* Buttons styling in action column */
-    td[data-label="Vitendo"] button {
-      padding: 0.4rem 0.8rem;
-      margin: 0 0.15rem 0 0;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.85rem;
-      transition: background-color 0.3s ease;
-      color: white;
-      min-width: 70px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    td[data-label="Vitendo"] button.edit {
-      background-color: #2a9d8f; /* teal */
-    }
-    td[data-label="Vitendo"] button.edit:hover {
-      background-color: #21867a;
-    }
-    td[data-label="Vitendo"] button.delete {
-      background-color: #e63946; /* red */
-    }
-    td[data-label="Vitendo"] button.delete:hover {
-      background-color: #b92a34;
-    }
-    td[data-label="Vitendo"] button.approve {
-      background-color: #457b9d; /* blue */
-    }
-    td[data-label="Vitendo"] button.approve:hover {
-      background-color: #35617b;
-    }
-
-    /* Custom modal background */
+    /* Modern modal styles */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top:0; left:0; right:0; bottom:0;
       background: rgba(0,0,0,0.5);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
-    .modal-box {
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal {
       background: white;
-      padding: 1.5rem 2rem;
-      border-radius: 10px;
-      max-width: 600px;
-      width: 95%;
+      border-radius: 12px;
+      max-width: 900px;
+      width: 90vw;
       max-height: 80vh;
       overflow-y: auto;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-      text-align: center;
-      font-family: 'Poppins', sans-serif;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
     }
-    .modal-box h2 {
-      margin-top: 0;
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .modal-header h2 {
+      margin: 0;
+      color: #0077b6;
+      font-size: 1.5rem;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+      font-weight: bold;
+      user-select: none;
+    }
+    .modal-close-btn:hover {
       color: #0077b6;
     }
-    .modal-box table {
-      margin-top: 1rem;
-      font-size: 0.85rem;
+    .modal table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 1rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .modal-box th, .modal-box td {
+    .modal th, .modal td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 10px 15px;
+      font-size: 0.9rem;
       text-align: left;
+      vertical-align: middle;
     }
-    .modal-box th {
+    .modal th {
       background-color: #0077b6;
       color: white;
       position: sticky;
       top: 0;
       z-index: 1;
-    }
-    .modal-close-btn {
-      margin-top: 1rem;
-      padding: 0.5rem 1.5rem;
-      background-color: #e63946;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
-    .modal-close-btn:hover {
-      background-color: #b92a34;
+      user-select: none;
     }
   </style>
 
@@ -234,22 +273,25 @@
   </header>
 
   <main>
-    <div style="margin-bottom: 1rem;">
-      <strong>Wasichana: <span id="wasichanaCount">0</span></strong> |
-      <strong>Wavulana: <span id="wavulanaCount">0</span></strong>
+    <div style="margin-bottom: 1rem; font-weight: bold;">
+      <span>Wasichana: <span id="wasichanaCount">0</span></span> |
+      <span>Wavulana: <span id="wavulanaCount">0</span></span>
     </div>
 
-    <label for="darasaFilter">Chagua Darasa: </label>
+    <label for="darasaFilter">Chagua Darasa:</label>
     <select id="darasaFilter">
       <option value="">-- Madarasa Yote --</option>
     </select>
 
     <input type="text" id="searchInput" placeholder="Tafuta mwanafunzi kwa jina...">
-    <button id="refreshBtn">Pakia Data Tena</button>
-    <button id="downloadBtn">Pakua CSV</button>
-    <button id="showApprovedBtn">Onyesha Maombi Yaliyopokelewa</button>
 
-    <table id="studentsTable">
+    <div style="margin-top: 1rem;">
+      <button id="refreshBtn">Pakia Data Tena</button>
+      <button id="downloadBtn">Pakua CSV</button>
+      <button id="showApprovedBtn">Tazama waliothibitishwa</button>
+    </div>
+
+    <table id="studentsTable" aria-label="Orodha ya Wanafunzi Wasioidhinishwa">
       <thead>
         <tr>
           <th>Jina Kamili</th>
@@ -266,6 +308,31 @@
     </table>
   </main>
 
+  <!-- Modal structure -->
+  <div class="modal-overlay" id="approvedModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Maombi Yaliyothibitishwa</h2>
+        <button class="modal-close-btn" aria-label="Funga dirisha" id="modalCloseBtn">&times;</button>
+      </div>
+      <table aria-describedby="modalTitle">
+        <thead>
+          <tr>
+            <th>Jina Kamili</th>
+            <th>Jinsia</th>
+            <th>Darasa</th>
+            <th>Cheti</th>
+            <th>Tarehe Usajili</th>
+            <th>ID Number</th>
+          </tr>
+        </thead>
+        <tbody id="approvedTbody">
+          <!-- Approved students data -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA16o2ANqTpNcU0tNS5p3PUpibXw5dBpr8",
@@ -281,13 +348,23 @@
     const db = firebase.firestore();
     let allStudents = [];
 
+    // Elements
+    const searchInput = document.getElementById("searchInput");
+    const darasaFilter = document.getElementById("darasaFilter");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const showApprovedBtn = document.getElementById("showApprovedBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const studentsTableBody = document.querySelector("#studentsTable tbody");
+    const approvedModal = document.getElementById("approvedModal");
+    const approvedTbody = document.getElementById("approvedTbody");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+
     document.addEventListener("DOMContentLoaded", () => {
-      const searchInput = document.getElementById("searchInput");
-      const darasaFilter = document.getElementById("darasaFilter");
-      document.getElementById("refreshBtn").onclick = loadStudents;
-      document.getElementById("downloadBtn").onclick = downloadCSV;
-      document.getElementById("showApprovedBtn").onclick = showApprovedApplications;
-      document.getElementById("logoutBtn").onclick = () => firebase.auth().signOut().then(() => location.href = "login.html");
+      refreshBtn.onclick = loadStudents;
+      downloadBtn.onclick = downloadCSV;
+      showApprovedBtn.onclick = openApprovedModal;
+      logoutBtn.onclick = () => firebase.auth().signOut().then(() => location.href = "login.html");
 
       firebase.auth().onAuthStateChanged(user => {
         if (user) loadStudents();
@@ -296,34 +373,66 @@
 
       searchInput.addEventListener("input", filterStudents);
       darasaFilter.addEventListener("change", filterStudents);
+
+      modalCloseBtn.addEventListener("click", closeApprovedModal);
+      approvedModal.addEventListener("click", (e) => {
+        if (e.target === approvedModal) closeApprovedModal();
+      });
+
+      // Accessibility: trap focus inside modal when open
+      document.addEventListener("keydown", (e) => {
+        if (!approvedModal.classList.contains("active")) return;
+        if (e.key === "Escape") closeApprovedModal();
+        // focus trap
+        const focusableElements = approvedModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        if (e.key === "Tab") {
+          if (e.shiftKey) { // Shift + Tab
+            if (document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            }
+          } else { // Tab
+            if (document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        }
+      });
     });
 
     async function loadStudents() {
-      const tableBody = document.querySelector("#studentsTable tbody");
-      tableBody.innerHTML = '<tr><td colspan="6">Inapakia...</td></tr>';
+      studentsTableBody.innerHTML = '<tr><td colspan="6">Inapakia...</td></tr>';
       try {
-        const snapshot = await db.collection("wanafunzi").get();
+        const snapshot = await db.collection("wanafunzi").orderBy("tareheUsajili", "desc").get();
         allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        const wasichana = allStudents.filter(s => s.jinsia === 'Msichana').length;
-        const wavulana = allStudents.filter(s => s.jinsia === 'Mvulana').length;
-        document.getElementById("wasichanaCount").innerText = wasichana;
-        document.getElementById("wavulanaCount").innerText = wavulana;
+        // Show only students NOT approved on main table
+        const notApproved = allStudents.filter(s => !s.approved);
 
+        const wasichanaCount = notApproved.filter(s => s.jinsia === 'Msichana').length;
+        const wavulanaCount = notApproved.filter(s => s.jinsia === 'Mvulana').length;
+        document.getElementById("wasichanaCount").innerText = wasichanaCount;
+        document.getElementById("wavulanaCount").innerText = wavulanaCount;
+
+        // Populate darasa filter from all data (approved + not)
         const darasaSet = new Set(allStudents.map(s => s.darasa).filter(Boolean));
-        const darasaFilter = document.getElementById("darasaFilter");
         darasaFilter.innerHTML = `<option value="">-- Madarasa Yote --</option>` + [...darasaSet].sort().map(d => `<option value="${d}">${d}</option>`).join('');
 
-        displayStudents(allStudents);
+        displayStudents(notApproved);
       } catch (e) {
-        tableBody.innerHTML = `<tr><td colspan="6">${e.message}</td></tr>`;
+        studentsTableBody.innerHTML = `<tr><td colspan="6">Kosa: ${e.message}</td></tr>`;
       }
     }
 
     function displayStudents(data) {
-      const tableBody = document.querySelector("#studentsTable tbody");
-      if (!data.length) return tableBody.innerHTML = '<tr><td colspan="6">Hakuna data</td></tr>';
-      tableBody.innerHTML = data.map(d => `
+      if (!data.length) {
+        studentsTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Hakuna data</td></tr>';
+        return;
+      }
+      studentsTableBody.innerHTML = data.map(d => `
         <tr>
           <td data-label="Jina Kamili">${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
           <td data-label="Jinsia">${d.jinsia || ''}</td>
@@ -333,143 +442,108 @@
           <td data-label="Vitendo">
             <button class="edit" onclick="editStudent('${d.id}')">Hariri</button>
             <button class="delete" onclick="confirmDelete('${d.id}')">Futa</button>
-            ${!d.approved ? `<button class="approve" onclick="confirmApprove('${d.id}')">Approve</button>` : '<span style="color:green;font-weight:bold;">Approved</span>'}
+            <button class="approve" onclick="confirmApprove('${d.id}')">Approve</button>
           </td>
-        </tr>`).join('');
+        </tr>
+      `).join('');
     }
 
     function filterStudents() {
-      const term = document.getElementById("searchInput").value.toLowerCase();
-      const darasa = document.getElementById("darasaFilter").value;
+      const term = searchInput.value.toLowerCase();
+      const darasa = darasaFilter.value;
       const filtered = allStudents.filter(d => {
         const matchName = (`${d.jinaKwanza || ''} ${d.jinaKati || ''} ${d.jinaMwisho || ''}`).toLowerCase().includes(term);
-        return matchName && (!darasa || d.darasa === darasa);
+        // We show only NOT approved in main table
+        return !d.approved && matchName && (!darasa || d.darasa === darasa);
       });
       displayStudents(filtered);
     }
 
-    // Custom modal functions for confirm dialogs
-    function showModal(message, onConfirm) {
-      const overlay = document.createElement('div');
-      overlay.classList.add('modal-overlay');
-      const modal = document.createElement('div');
-      modal.classList.add('modal-box');
-      modal.innerHTML = `
-        <p>${message}</p>
-        <div class="modal-buttons">
-          <button class="confirm">Thibitisha</button>
-          <button class="cancel">Ghairi</button>
-        </div>
-      `;
-      overlay.appendChild(modal);
-      document.body.appendChild(overlay);
-
-      const confirmBtn = modal.querySelector('.confirm');
-      const cancelBtn = modal.querySelector('.cancel');
-
-      confirmBtn.onclick = () => {
-        onConfirm();
-        document.body.removeChild(overlay);
-      };
-      cancelBtn.onclick = () => {
-        document.body.removeChild(overlay);
-      };
-    }
-
     function confirmDelete(id) {
-      showModal('Una uhakika unataka kufuta mwanafunzi huyu?', () => {
-        db.collection("wanafunzi").doc(id).delete().then(() => {
-          alert("Mwanafunzi amefutwa.");
-          loadStudents();
-        }).catch(err => alert("Kosa: " + err.message));
-      });
+      if (confirm("Una uhakika unataka kufuta mwanafunzi huyu?")) {
+        deleteStudent(id);
+      }
     }
-
-    function confirmApprove(id) {
-      showModal('Thibitisha mwanafunzi huyu?', () => {
-        const tarehe = new Date();
-        const idNum = `MBG-${tarehe.getFullYear()}${(tarehe.getMonth()+1).toString().padStart(2, '0')}${tarehe.getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
-        
-        db.collection("wanafunzi").doc(id).update({
-          approved: true,
-          idNumber: idNum
-        }).then(() => {
-          window.location.href = `approved.html?id=${id}`;
-        }).catch(error => {
-          alert("Kosa: " + error.message);
-        });
-      });
+    function deleteStudent(id) {
+      db.collection("wanafunzi").doc(id).delete().then(() => {
+        alert("Mwanafunzi amefutwa.");
+        loadStudents();
+      }).catch(e => alert("Kosa: " + e.message));
     }
 
     function editStudent(id) {
       window.location.href = `edit.html?id=${id}`;
     }
 
+    function confirmApprove(id) {
+      if (confirm("Thibitisha mwanafunzi huyu?")) {
+        approveStudent(id);
+      }
+    }
+    function approveStudent(id) {
+      const tarehe = new Date();
+      const idNum = `MBG-${tarehe.getFullYear()}${(tarehe.getMonth()+1).toString().padStart(2,'0')}${tarehe.getDate().toString().padStart(2,'0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+      db.collection("wanafunzi").doc(id).update({
+        approved: true,
+        idNumber: idNum
+      }).then(() => {
+        alert("Mwanafunzi amethibitishwa na ID Number imepewa.");
+        loadStudents();
+      }).catch(error => {
+        alert("Kosa: " + error.message);
+      });
+    }
+
     function downloadCSV() {
-      let csv = "Jina Kamili,Jinsia,Darasa,Cheti,Tarehe Usajili\n";
-      allStudents.forEach(d => {
+      // Download only approved students
+      const approvedStudents = allStudents.filter(s => s.approved);
+      if (approvedStudents.length === 0) {
+        alert("Hakuna wanafunzi waliothibitishwa wa kupakua.");
+        return;
+      }
+      let csv = "Jina Kamili,Jinsia,Darasa,Cheti,Tarehe Usajili,ID Number\n";
+      approvedStudents.forEach(d => {
         const jina = [d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ");
         const tarehe = d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : '';
-        csv += `"${jina}","${d.jinsia}","${d.darasa}","${d.nambaChetiKuzaliwa}","${tarehe}"\n`;
+        csv += `"${jina}","${d.jinsia}","${d.darasa}","${d.nambaChetiKuzaliwa}","${tarehe}","${d.idNumber || ''}"\n`;
       });
       const blob = new Blob([csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "wanafunzi.csv";
+      a.download = "wanafunzi_waliothibitishwa.csv";
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    // New function: show approved students in modal
-    function showApprovedApplications() {
-      // Filter approved only
-      const approved = allStudents.filter(s => s.approved === true);
+    function openApprovedModal() {
+      // Filter approved
+      const approvedStudents = allStudents.filter(s => s.approved);
+      if (approvedStudents.length === 0) {
+        alert("Hakuna wanafunzi waliothibitishwa.");
+        return;
+      }
+      approvedTbody.innerHTML = approvedStudents.map(d => `
+        <tr>
+          <td data-label="Jina Kamili">${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
+          <td data-label="Jinsia">${d.jinsia || ''}</td>
+          <td data-label="Darasa">${d.darasa || ''}</td>
+          <td data-label="Cheti">${d.nambaChetiKuzaliwa || ''}</td>
+          <td data-label="Tarehe Usajili">${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
+          <td data-label="ID Number">${d.idNumber || ''}</td>
+        </tr>
+      `).join('');
 
-      // Create modal elements
-      const overlay = document.createElement('div');
-      overlay.classList.add('modal-overlay');
-
-      const modal = document.createElement('div');
-      modal.classList.add('modal-box');
-
-      modal.innerHTML = `
-        <h2>Maombi Yaliyopokelewa (${approved.length})</h2>
-        ${approved.length === 0 ? '<p>Hakuna maombi yaliyopokelewa kwa sasa.</p>' : `
-          <table>
-            <thead>
-              <tr>
-                <th>Jina Kamili</th>
-                <th>Jinsia</th>
-                <th>Darasa</th>
-                <th>Cheti</th>
-                <th>Tarehe Usajili</th>
-                <th>ID Number</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${approved.map(d => `
-                <tr>
-                  <td>${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
-                  <td>${d.jinsia || ''}</td>
-                  <td>${d.darasa || ''}</td>
-                  <td>${d.nambaChetiKuzaliwa || ''}</td>
-                  <td>${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
-                  <td>${d.idNumber || ''}</td>
-                </tr>`).join('')}
-            </tbody>
-          </table>
-        `}
-        <button class="modal-close-btn">Funga</button>
-      `;
-
-      overlay.appendChild(modal);
-      document.body.appendChild(overlay);
-
-      modal.querySelector(".modal-close-btn").onclick = () => {
-        document.body.removeChild(overlay);
-      };
+      approvedModal.hidden = false;
+      setTimeout(() => approvedModal.classList.add("active"), 10);
+      modalCloseBtn.focus();
     }
+
+    function closeApprovedModal() {
+      approvedModal.classList.remove("active");
+      setTimeout(() => approvedModal.hidden = true, 300);
+    }
+
   </script>
 </body>
 </html>
