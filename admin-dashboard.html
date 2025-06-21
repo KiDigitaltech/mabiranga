@@ -55,7 +55,7 @@
       border-radius: 8px;
       font-size: 1rem;
     }
-    #refreshBtn, #downloadBtn {
+    #refreshBtn, #downloadBtn, #showApprovedBtn {
       display: inline-block;
       margin: 0.5rem 1rem 1rem 0;
       padding: 0.8rem 1.5rem;
@@ -65,6 +65,10 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    #refreshBtn:hover, #downloadBtn:hover, #showApprovedBtn:hover {
+      background-color: #005f8d;
     }
     table {
       width: 100%;
@@ -89,6 +93,7 @@
       background-color: #f4faff;
     }
 
+    /* Responsive table */
     @media (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -118,6 +123,98 @@
         font-weight: bold;
         color: #0077b6;
       }
+    }
+
+    /* Buttons styling in action column */
+    td[data-label="Vitendo"] button {
+      padding: 0.4rem 0.8rem;
+      margin: 0 0.15rem 0 0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: background-color 0.3s ease;
+      color: white;
+      min-width: 70px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    td[data-label="Vitendo"] button.edit {
+      background-color: #2a9d8f; /* teal */
+    }
+    td[data-label="Vitendo"] button.edit:hover {
+      background-color: #21867a;
+    }
+    td[data-label="Vitendo"] button.delete {
+      background-color: #e63946; /* red */
+    }
+    td[data-label="Vitendo"] button.delete:hover {
+      background-color: #b92a34;
+    }
+    td[data-label="Vitendo"] button.approve {
+      background-color: #457b9d; /* blue */
+    }
+    td[data-label="Vitendo"] button.approve:hover {
+      background-color: #35617b;
+    }
+
+    /* Custom modal background */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .modal-box {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 95%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+    .modal-box h2 {
+      margin-top: 0;
+      color: #0077b6;
+    }
+    .modal-box table {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .modal-box th, .modal-box td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .modal-box th {
+      background-color: #0077b6;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .modal-close-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      background-color: #e63946;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .modal-close-btn:hover {
+      background-color: #b92a34;
     }
   </style>
 
@@ -150,6 +247,7 @@
     <input type="text" id="searchInput" placeholder="Tafuta mwanafunzi kwa jina...">
     <button id="refreshBtn">Pakia Data Tena</button>
     <button id="downloadBtn">Pakua CSV</button>
+    <button id="showApprovedBtn">Onyesha Maombi Yaliyopokelewa</button>
 
     <table id="studentsTable">
       <thead>
@@ -188,6 +286,7 @@
       const darasaFilter = document.getElementById("darasaFilter");
       document.getElementById("refreshBtn").onclick = loadStudents;
       document.getElementById("downloadBtn").onclick = downloadCSV;
+      document.getElementById("showApprovedBtn").onclick = showApprovedApplications;
       document.getElementById("logoutBtn").onclick = () => firebase.auth().signOut().then(() => location.href = "login.html");
 
       firebase.auth().onAuthStateChanged(user => {
@@ -232,8 +331,9 @@
           <td data-label="Cheti">${d.nambaChetiKuzaliwa || ''}</td>
           <td data-label="Tarehe Usajili">${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
           <td data-label="Vitendo">
-            <button onclick="editStudent('${d.id}')">Hariri</button>
-            <button onclick="deleteStudent('${d.id}')">Futa</button>
+            <button class="edit" onclick="editStudent('${d.id}')">Hariri</button>
+            <button class="delete" onclick="confirmDelete('${d.id}')">Futa</button>
+            ${!d.approved ? `<button class="approve" onclick="confirmApprove('${d.id}')">Approve</button>` : '<span style="color:green;font-weight:bold;">Approved</span>'}
           </td>
         </tr>`).join('');
     }
@@ -248,13 +348,57 @@
       displayStudents(filtered);
     }
 
-    function deleteStudent(id) {
-      if (confirm("Una uhakika unataka kufuta mwanafunzi huyu?")) {
+    // Custom modal functions for confirm dialogs
+    function showModal(message, onConfirm) {
+      const overlay = document.createElement('div');
+      overlay.classList.add('modal-overlay');
+      const modal = document.createElement('div');
+      modal.classList.add('modal-box');
+      modal.innerHTML = `
+        <p>${message}</p>
+        <div class="modal-buttons">
+          <button class="confirm">Thibitisha</button>
+          <button class="cancel">Ghairi</button>
+        </div>
+      `;
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      const confirmBtn = modal.querySelector('.confirm');
+      const cancelBtn = modal.querySelector('.cancel');
+
+      confirmBtn.onclick = () => {
+        onConfirm();
+        document.body.removeChild(overlay);
+      };
+      cancelBtn.onclick = () => {
+        document.body.removeChild(overlay);
+      };
+    }
+
+    function confirmDelete(id) {
+      showModal('Una uhakika unataka kufuta mwanafunzi huyu?', () => {
         db.collection("wanafunzi").doc(id).delete().then(() => {
           alert("Mwanafunzi amefutwa.");
           loadStudents();
+        }).catch(err => alert("Kosa: " + err.message));
+      });
+    }
+
+    function confirmApprove(id) {
+      showModal('Thibitisha mwanafunzi huyu?', () => {
+        const tarehe = new Date();
+        const idNum = `MBG-${tarehe.getFullYear()}${(tarehe.getMonth()+1).toString().padStart(2, '0')}${tarehe.getDate().toString().padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+        
+        db.collection("wanafunzi").doc(id).update({
+          approved: true,
+          idNumber: idNum
+        }).then(() => {
+          window.location.href = `approved.html?id=${id}`;
+        }).catch(error => {
+          alert("Kosa: " + error.message);
         });
-      }
+      });
     }
 
     function editStudent(id) {
@@ -275,6 +419,56 @@
       a.download = "wanafunzi.csv";
       a.click();
       URL.revokeObjectURL(url);
+    }
+
+    // New function: show approved students in modal
+    function showApprovedApplications() {
+      // Filter approved only
+      const approved = allStudents.filter(s => s.approved === true);
+
+      // Create modal elements
+      const overlay = document.createElement('div');
+      overlay.classList.add('modal-overlay');
+
+      const modal = document.createElement('div');
+      modal.classList.add('modal-box');
+
+      modal.innerHTML = `
+        <h2>Maombi Yaliyopokelewa (${approved.length})</h2>
+        ${approved.length === 0 ? '<p>Hakuna maombi yaliyopokelewa kwa sasa.</p>' : `
+          <table>
+            <thead>
+              <tr>
+                <th>Jina Kamili</th>
+                <th>Jinsia</th>
+                <th>Darasa</th>
+                <th>Cheti</th>
+                <th>Tarehe Usajili</th>
+                <th>ID Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${approved.map(d => `
+                <tr>
+                  <td>${[d.jinaKwanza, d.jinaKati, d.jinaMwisho].filter(Boolean).join(" ")}</td>
+                  <td>${d.jinsia || ''}</td>
+                  <td>${d.darasa || ''}</td>
+                  <td>${d.nambaChetiKuzaliwa || ''}</td>
+                  <td>${d.tareheUsajili ? new Date(d.tareheUsajili).toLocaleDateString() : ''}</td>
+                  <td>${d.idNumber || ''}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        `}
+        <button class="modal-close-btn">Funga</button>
+      `;
+
+      overlay.appendChild(modal);
+      document.body.appendChild(overlay);
+
+      modal.querySelector(".modal-close-btn").onclick = () => {
+        document.body.removeChild(overlay);
+      };
     }
   </script>
 </body>
